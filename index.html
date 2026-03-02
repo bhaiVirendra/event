@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration Count</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Modernized variable palette */
+        :root {
+            --primary-color: #2563eb;
+            --primary-light: #60a5fa;
+            --primary-hover: #1d4ed8;
+            --bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+            --surface-color: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --input-bg: #f8fafc;
+            --error-color: #ef4444;
+            --glow-blue: rgba(37, 99, 235, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* 1. Enhanced, levitating form container */
+        .form-container {
+            background-color: var(--surface-color);
+            width: 100%;
+            max-width: 550px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            /* Added smooth transition for levitation effect */
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s ease;
+        }
+
+        /* Hover effect for the main card */
+        .form-container:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        p.subtitle {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 25px 0 15px 0;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .required-asterisk::after {
+            content: " *";
+            color: var(--error-color);
+            font-weight: bold;
+        }
+
+        /* 2. Modern Inputs with unique focus glow and hover highlight */
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            /* Smooth transition for all properties */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+        }
+
+        /* Input Hover effect: Highlight border and subtle blue tint */
+        input:hover, select:hover {
+            border-color: var(--primary-light);
+            background-color: rgba(37, 99, 235, 0.02);
+            transform: translateY(-1px);
+        }
+
+        /* Input Focus effect: Strong glow and solid border */
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: #fff;
+            box-shadow: 0 0 0 5px var(--glow-blue);
+        }
+
+        input:focus:invalid, select:focus:invalid {
+            border-color: var(--error-color);
+            box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.2);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        /* 3. Smooth, cascading entry animation for team members */
+        .team-member-box {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            margin-top: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            opacity: 0;
+            transform: translateY(-15px) scale(0.98);
+            /* Cascading entry: handled by JS animation delay */
+            animation: cascadeIn 0.5s forwards cubic-bezier(0.23, 1, 0.32, 1);
+            /* Smooth hover for dynamic boxes */
+            transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+        }
+
+        /* Staggered entry animation */
+        @keyframes cascadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Hover effect for dynamic team boxes: refined lift and color accent */
+        .team-member-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+            border-color: var(--primary-color);
+        }
+
+        .team-member-box h4 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            color: var(--primary-color);
+        }
+
+        /* 4. Smooth, pulsing, animated submit button */
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, background 0.3s ease;
+        }
+
+        /* Button hover: Gentle lift, stronger shadow, and glow */
+        button:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+            background: linear-gradient(135deg, var(--primary-hover) 0%, #2563eb 100%);
+        }
+
+        button:active {
+            transform: translateY(1px) scale(0.99);
+            box-shadow: 0 5px 10px rgba(37, 99, 235, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <div class="header-section">
+        <h2>Event Registration</h2>
+        <p class="subtitle">Fill out all the details below to secure your spot.</p>
+    </div>
+
+    <form id="registrationForm">
+        
+        <div class="form-group">
+            <label for="volunteerName" class="required-asterisk">Volunteer Name</label>
+            <input type="text" id="volunteerName" name="volunteerName" placeholder="Enter volunteer's name" required>
+        </div>
+
+        <h3>Team Leader Details</h3>
+        
+        <div class="form-group">
+            <label for="studentName" class="required-asterisk">Student Name</label>
+            <input type="text" id="studentName" name="studentName" placeholder="Full Name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="rollNumber" class="required-asterisk">Roll Number</label>
+            <input type="text" id="rollNumber" name="rollNumber" placeholder="e.g., 2405001" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email" class="required-asterisk">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="student@example.com" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="contactNumber" class="required-asterisk">Contact Number</label>
+            <input type="tel" id="contactNumber" name="contactNumber" placeholder="+91 00000 00000" required>
+        </div>
+
+        <h3>Team Member Details</h3>
+        <div class="form-group">
+            <label for="teamSize" class="required-asterisk">Total Team Size</label>
+            <select id="teamSize" name="teamSize" onchange="generateTeamFields()" required>
+                <option value="" disabled selected>Select size (2 to 5 members)</option>
+                <option value="2">2 Members</option>
+                <option value="3">3 Members</option>
+                <option value="4">4 Members</option>
+                <option value="5">5 Members</option>
+            </select>
+        </div>
+
+        <div id="dynamicMembersContainer"></div>
+
+        <button type="submit">Complete Registration</button>
+    </form>
+</div>
+
+<script>
+    function generateTeamFields() {
+        const teamSize = document.getElementById("teamSize").value;
+        const container = document.getElementById("dynamicMembersContainer");
+        
+        container.innerHTML = "";
+        const extraMembers = parseInt(teamSize) - 1;
+
+        if (extraMembers > 0) {
+            for (let i = 1; i <= extraMembers; i++) {
+                const memberDiv = document.createElement("div");
+                memberDiv.className = "team-member-box";
+                
+                // Add staggered delay to the animation so they cascade in
+                memberDiv.style.animationDelay = `${i * 0.1}s`;
+                
+                memberDiv.innerHTML = `
+                    <h4>Team Member ${i + 1}</h4>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="member${i+1}Name" placeholder="Full Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Roll Number</label>
+                        <input type="text" name="member${i+1}Roll" placeholder="Roll Number">
+                    </div>
+                `;
+                
+                container.appendChild(memberDiv);
+            }
+        }
+    }
+
+    // Google Sheets Submission Logic
+    const form = document.getElementById('registrationForm');
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxVry96GagFOdRq6CQl-2jPOw_AsitTZ70NfokwHNP1nHuFybORcTPpr5eKqF0bcBqO/exec';
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerText;
+        submitBtn.innerText = 'Submitting...';
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.7';
+
+        fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+            .then(response => {
+                alert('Registration successfully submitted!');
+                form.reset();
+                document.getElementById('dynamicMembersContainer').innerHTML = '';
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                alert('Something went wrong. Please try again.');
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            });
+    });
+</script>
+
+</body>
+</html>
